@@ -3,6 +3,7 @@ import morph as mp
 import numpy as np
 import getopt
 import sys
+import time 
 
 
 def get_structuring_element(morph, size):
@@ -95,7 +96,9 @@ def main():
         sys.exit(1)
 
     # Passa imagem e quantidade de interações
+    start = time.time()
     image = mopts[mopt](np.array(im, dtype=np.uint8), kernel, iterations)
+    print(time.time() - start)
 
     # convert back
     im = Image.fromarray(np.uint8(image))
