@@ -1,7 +1,9 @@
 from PIL import Image
 import numpy as np
+import time
 
-def erosion(kernel, im):
+def erosion(kernel, name_file):
+    im = Image.open(name_file)
     image = im.convert('L')
 
     x = int(kernel.shape[0] / 2)
@@ -13,8 +15,6 @@ def erosion(kernel, im):
     new_image = np.zeros((image.height, image.width, 3))
 
     pad_image[x:x + image.height, y:y + image.width] = image
-    print(pad_image.shape[0], pad_image.shape[1])
-    print(image.height)
 
     for x_image in range(image.height):
         for y_image in range(image.width):
@@ -28,8 +28,10 @@ def erosion(kernel, im):
             new_image[x_image][y_image] = im.getpixel((valor[1][1] - x,valor[1][0] - y))
     fim = Image.fromarray(np.uint8(new_image)).convert('RGB')
     fim.show()
+    fim.save("erosion_" + name_file)
 
-def dilation(kernel, im):
+def dilation(kernel, name_file):
+    im = Image.open(name_file)
     image = im.convert('L')
 
     x = int(kernel.shape[0] / 2)
@@ -41,8 +43,6 @@ def dilation(kernel, im):
     new_image = np.zeros((image.height, image.width, 3))
 
     pad_image[x:x + image.height, y:y + image.width] = image
-    print(pad_image.shape[0], pad_image.shape[1])
-    print(image.height)
 
     for x_image in range(image.height):
         for y_image in range(image.width):
@@ -56,16 +56,17 @@ def dilation(kernel, im):
             new_image[x_image][y_image] = im.getpixel((valor[1][1] - x,valor[1][0] - y))
     fim = Image.fromarray(np.uint8(new_image)).convert('RGB')
     fim.show()
+    fim.save("dilation_" + name_file)
 
 
-im = Image.open("Crusader.jpg")
+name_file = "mul.jpeg"
 
-kernel = (5,5)
+kernel = (3,3)
 kernel = np.zeros(kernel, dtype=np.uint8)
 kernel[:] = 1
 
-# erosion(kernel, im)
-dilation(kernel, im)
+# erosion(kernel, name_file)
+dilation(kernel, name_file)
 
 #--------------------------------------------------------------------------------------------------------------------------
 # Fim da aplicação
