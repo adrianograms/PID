@@ -72,7 +72,7 @@ def main():
         elif opt == '-d':
             mopt = 1
 
-    if None in (in_file_name, out_file_name, kernel_size, opt) and not custom_kernel:
+    if None in (in_file_name, out_file_name, kernel_size, mopt) and not custom_kernel:
         print('Error: Missing paramether')
         sys.exit(1)
 
@@ -108,5 +108,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
