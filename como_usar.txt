@@ -1,0 +1,50 @@
+Primeiro e preciso instalar as dependências usando pip, também é
+necessário python 3.8. Para instalar as dependências utilize:
+
+pip install requirements.txt 
+
+
+NOTA: Pode ser necessário executar o comando acima como sudo. 
+  
+
+Para utilizar o software basta executar: ./main.py 
+  
+
+NOTA: Pode ser necessário tornar o arquivo executável. Para isso
+utilize chmod +x main.py.
+
+
+Os parâmetros para o programa são os seguintes: 
+
+-i = Nome do arquivo de entrada. Por exemplo: -i test.png 
+
+-o = Nome do arquivo de saída. Por exemplo: -o test_out.jpg 
+
+-m = O tipo do kernel/elemento estruturante, este pode ser cross ou 
+rectangle. Por exemplo: -m cross. 
+
+cross = 0 1 0   rectangle = 1 1 1 
+      	1 1 1		    1 1 1 
+	0 1 0		    1 1 1 
+
+-s = O tamanho kernel/elemento estruturante, este valor deve ser maior 
+do que 1 e ímpar. Por exemplo: -s 3. 
+
+-r = O número de iterações, valor padrão = 1. Por exemplo -r 10. 
+
+-e = Escolhe a operação morfológica de erosão. 
+
+-d = Escolha a operação morfológica de dilatação. 
+
+-c = Le um kernel/elemento estruturante de tamanho dado por -s do usuário. 
+
+Exemplo de uso: 
+
+./main.py -i mul.jpeg -o b.png -m rectangle -s 3 -e -r 2 
+
+Executa a operação de erosão '-e' com duas iterações '-r 2' com um 
+elemento estruturante de tamanho 3x3 '-s 3' do tipo retângulo '-m 
+rectangle' sobre a imagem mul.jpeg '-i mul.jpeg' e salva como b.png 
+'-o b.png'. 
+
+ 

@@ -19,8 +19,6 @@ def dilate(image, kernel, iterations=1):
     pad_image = np.zeros((image.shape[0] + x * 2, image.shape[1] + y * 2),
                          dtype=np.uint8)
 
-    pad_image[:] = 0
-
     for _ in range(iterations):
         pad_image[x:x + image.shape[0], y:y + image.shape[1]] = image
 
