@@ -28,6 +28,22 @@ def read_kernel(size):
     return k
 
 
+def usage():
+    print("Os parâmetros para o programa são os seguintes:\n\
+    -i = Nome do arquivo de entrada. Por exemplo: -i test.png\n\
+    -o = Nome do arquivo de saída. Por exemplo: -o test_out.jpg\n\
+    -m = O tipo do kernel/elemento estruturante, este pode ser cross ou\
+rectangle. Por exemplo: -m cross.\n\
+    -s = O tamanho kernel/elemento estruturante, este valor deve ser maior do\
+que 1 e ímpar. Por exemplo: -s 3.\n\
+    -r = O número de iterações, valor padrão = 1. Por exemplo -r 10.\n\
+    -e = Escolhe a operação morfológica de erosão.\n\
+    -d = Escolha a operação morfológica de dilatação.\n\
+    -c = Le um kernel/elemento estruturante de tamanho dado por -s do usuário.\
+    \n\
+    ")
+
+
 def main():
     in_file_name = None
     out_file_name = None
@@ -42,7 +58,7 @@ def main():
     mopts = [mp.erode, mp.dilate]
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'i:o:m:s:r:edc')
+        opts, args = getopt.getopt(sys.argv[1:], 'i:o:m:s:r:edch')
         # -i nome do arquivo de entrada
         # -o nome do arquivo de saida
         # -m tipo do kernel
@@ -63,23 +79,43 @@ def main():
         elif opt == '-m':
             kernel = arg
         elif opt == '-s':
-            kernel_size = int(arg)
+            try:
+                kernel_size = int(arg)
+            except:
+                print('Error: Kernel size must be a number')
+                usage()
+                sys.exit(1)
         elif opt == '-c':
             custom_kernel = True
         elif opt == '-r':
-            iterations = int(arg)
+            try:
+                iterations = int(arg)
+            except:
+                print('Error: Number of iterations must be a number')
+                usage()
+                sys.exit(1)
+            if iterations <= 0:
+                print('Error: Number of iterations must be possitive and \
+bigger than zero')
+                usage()
+                sys.exit(1)
         elif opt == '-e':
             mopt = 0
         elif opt == '-d':
             mopt = 1
+        elif opt == '-h':
+            usage()
+            sys.exit(1)
 
     if None in (in_file_name, out_file_name,
                 kernel_size, mopt) and not custom_kernel:
         print('Error: Missing paramether')
+        usage()
         sys.exit(1)
 
     if kernel_size == 1 or kernel_size % 2 == 0:
         print('Error: Kernel size must be odd and bigger than 1')
+        usage()
         sys.exit(1)
 
     if custom_kernel:
@@ -88,6 +124,8 @@ def main():
         kernel = get_structuring_element(kernel, kernel_size)
     else:
         print('Error: Invalid kernel paramether')
+        usage()
+        sys.exit(1)
 
     im = []
     try:
@@ -103,7 +141,7 @@ def main():
     # convert back
     im = Image.fromarray(np.uint8(image))
     im.save(out_file_name)
-    im.show()
+    # im.show()
 
 
 if __name__ == '__main__':

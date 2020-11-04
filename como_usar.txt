@@ -46,5 +46,3 @@ Executa a operação de erosão '-e' com duas iterações '-r 2' com um
 elemento estruturante de tamanho 3x3 '-s 3' do tipo retângulo '-m 
 rectangle' sobre a imagem mul.jpeg '-i mul.jpeg' e salva como b.png 
 '-o b.png'. 
-
- 
