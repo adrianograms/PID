@@ -38,42 +38,42 @@ def floodfill(image, y,x, bg, limit, image_grayscale):
     pos = q[0]
     q.pop(0)
 
-    if(image_grayscale[pos[0],pos[1]+1] < bg and check_limit(image_grayscale.shape, pos[0], pos[1] + 1)):
+    if(check_limit(image_grayscale.shape, pos[0], pos[1] + 1) and image_grayscale[pos[0],pos[1]+1] < bg ):
       q.append((pos[0],pos[1]+1))
       new_image[pos[0] - limit[2], pos[1]+1 - limit[0]] = image[pos[0],pos[1]+1]
       image_grayscale[pos[0],pos[1]+1] = 255
 
-    if(image_grayscale[pos[0],pos[1]-1] < bg and check_limit(image_grayscale.shape, pos[0], pos[1] - 1)):
+    if(check_limit(image_grayscale.shape, pos[0], pos[1] - 1) and image_grayscale[pos[0],pos[1]-1] < bg ):
       q.append((pos[0],pos[1]-1))
       new_image[pos[0] - limit[2], pos[1]-1 - limit[0]] = image[pos[0],pos[1]-1]
       image_grayscale[pos[0],pos[1]-1] = 255
 
-    if(image_grayscale[pos[0]-1,pos[1]] < bg and check_limit(image_grayscale.shape, pos[0] - 1, pos[1])):
+    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1]) and image_grayscale[pos[0]-1,pos[1]] < bg ):
       q.append((pos[0]-1,pos[1]))
       new_image[pos[0]-1 - limit[2], pos[1] - limit[0]] = image[pos[0]-1,pos[1]]
       image_grayscale[pos[0]-1,pos[1]] = 255
 
-    if(image_grayscale[pos[0]+1,pos[1]] < bg and check_limit(image_grayscale.shape, pos[0] + 1, pos[1])):
+    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1]) and image_grayscale[pos[0]+1,pos[1]] < bg ):
       q.append((pos[0]+1,pos[1]))
       new_image[pos[0]+1 - limit[2], pos[1] - limit[0]] =  image[pos[0]+1,pos[1]]
       image_grayscale[pos[0]+1,pos[1]] = 255
 
-    if(image_grayscale[pos[0]+1,pos[1]+1] < bg and check_limit(image_grayscale.shape, pos[0] + 1, pos[1] + 1)):
+    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1] + 1) and image_grayscale[pos[0]+1,pos[1]+1] < bg ):
       q.append((pos[0]+1,pos[1]+1))
       new_image[pos[0]+1 - limit[2], pos[1]+1 - limit[0]] = image[pos[0]+1,pos[1]+1]
       image_grayscale[pos[0]+1,pos[1]+1] = 255
 
-    if(image_grayscale[pos[0]-1,pos[1]-1] < bg and check_limit(image_grayscale.shape, pos[0] - 1, pos[1] - 1)):
+    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1] - 1) and image_grayscale[pos[0]-1,pos[1]-1] < bg ):
       q.append((pos[0]-1,pos[1]-1))
       new_image[pos[0]-1 - limit[2], pos[1]-1 - limit[0]] = image[pos[0]-1,pos[1]-1]
       image_grayscale[pos[0]-1,pos[1]-1] = 255
 
-    if(image_grayscale[pos[0]-1,pos[1]+1] < bg and check_limit(image_grayscale.shape, pos[0] - 1, pos[1] + 1)):
+    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1] + 1) and image_grayscale[pos[0]-1,pos[1]+1] < bg ):
       q.append((pos[0]-1,pos[1]+1))
       new_image[pos[0]-1 - limit[2], pos[1]+1 - limit[0]] = image[pos[0]-1,pos[1]+1]
       image_grayscale[pos[0]-1,pos[1]+1] = 255
 
-    if(image_grayscale[pos[0]+1,pos[1]-1] < bg and check_limit(image_grayscale.shape, pos[0] + 1, pos[1] - 1)):
+    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1] - 1) and image_grayscale[pos[0]+1,pos[1]-1] < bg ):
       q.append((pos[0]+1,pos[1]-1))
       new_image[pos[0]+1 - limit[2], pos[1]-1 - limit[0]] =  image[pos[0]+1,pos[1]-1]
       image_grayscale[pos[0]+1,pos[1]-1] = 255
@@ -110,7 +110,7 @@ def foo(file):
                 origin = pq = (x,y)
                 c = 0
                 border.append((x,y))
-                for _ in range(0, 8):
+                for _ in range(0, 7):
                     i = pq[0] + neighbours[c][0]
                     j = pq[1] + neighbours[c][1]
                     if(check_limit(image.shape, i, j)):
@@ -119,13 +119,14 @@ def foo(file):
                             border.append((i,j))
                             pq = (i,j)
                             break
-                        c = (c + 1)%8
+                    c = (c + 1)%8
                 while(pq != origin):
-                    #c_start = c
+                    start_pq = pq
                     for _ in range(0, 7):
                         i = pq[0] + neighbours[c][0]
                         j = pq[1] + neighbours[c][1]
                         if(not (check_limit(image.shape, i, j))):
+                            c = (c + 1)%8
                             continue
                         if(image[i,j] < bg):
                             c = (c + 5)%8
@@ -133,7 +134,8 @@ def foo(file):
                             pq = (i,j)
                             break
                         c = (c + 1)%8
-                    #if(c_start == c):
+                    #if(start_pq[0] == pq[0] and start_pq[1] == pq[1]):
+                        #print(start_pq, pq)
                         #break
                 a = np.array(border)
                 miny = np.min(a[:,0]) - 1
