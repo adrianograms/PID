@@ -32,51 +32,51 @@ def floodfill(image, y,x, bg, limit, image_grayscale):
   new_image[:] = [255, 255, 255]
   q = [(y,x)]
   new_image[y - limit[2], x - limit[0]] = image[y,x]
-  image_grayscale[y,x] = 255
+  image_grayscale[y,x] = False
 
   while(len(q)):
     pos = q[0]
     q.pop(0)
 
-    if(check_limit(image_grayscale.shape, pos[0], pos[1] + 1) and image_grayscale[pos[0],pos[1]+1] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0], pos[1] + 1) and image_grayscale[pos[0],pos[1]+1] ):
       q.append((pos[0],pos[1]+1))
       new_image[pos[0] - limit[2], pos[1]+1 - limit[0]] = image[pos[0],pos[1]+1]
-      image_grayscale[pos[0],pos[1]+1] = 255
+      image_grayscale[pos[0],pos[1]+1] = False
 
-    if(check_limit(image_grayscale.shape, pos[0], pos[1] - 1) and image_grayscale[pos[0],pos[1]-1] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0], pos[1] - 1) and image_grayscale[pos[0],pos[1]-1] ):
       q.append((pos[0],pos[1]-1))
       new_image[pos[0] - limit[2], pos[1]-1 - limit[0]] = image[pos[0],pos[1]-1]
-      image_grayscale[pos[0],pos[1]-1] = 255
+      image_grayscale[pos[0],pos[1]-1] = False
 
-    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1]) and image_grayscale[pos[0]-1,pos[1]] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1]) and image_grayscale[pos[0]-1,pos[1]] ):
       q.append((pos[0]-1,pos[1]))
       new_image[pos[0]-1 - limit[2], pos[1] - limit[0]] = image[pos[0]-1,pos[1]]
-      image_grayscale[pos[0]-1,pos[1]] = 255
+      image_grayscale[pos[0]-1,pos[1]] = False
 
-    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1]) and image_grayscale[pos[0]+1,pos[1]] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1]) and image_grayscale[pos[0]+1,pos[1]] ):
       q.append((pos[0]+1,pos[1]))
       new_image[pos[0]+1 - limit[2], pos[1] - limit[0]] =  image[pos[0]+1,pos[1]]
-      image_grayscale[pos[0]+1,pos[1]] = 255
+      image_grayscale[pos[0]+1,pos[1]] = False
 
-    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1] + 1) and image_grayscale[pos[0]+1,pos[1]+1] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1] + 1) and image_grayscale[pos[0]+1,pos[1]+1] ):
       q.append((pos[0]+1,pos[1]+1))
       new_image[pos[0]+1 - limit[2], pos[1]+1 - limit[0]] = image[pos[0]+1,pos[1]+1]
-      image_grayscale[pos[0]+1,pos[1]+1] = 255
+      image_grayscale[pos[0]+1,pos[1]+1] = False
 
-    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1] - 1) and image_grayscale[pos[0]-1,pos[1]-1] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1] - 1) and image_grayscale[pos[0]-1,pos[1]-1] ):
       q.append((pos[0]-1,pos[1]-1))
       new_image[pos[0]-1 - limit[2], pos[1]-1 - limit[0]] = image[pos[0]-1,pos[1]-1]
-      image_grayscale[pos[0]-1,pos[1]-1] = 255
+      image_grayscale[pos[0]-1,pos[1]-1] = False
 
-    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1] + 1) and image_grayscale[pos[0]-1,pos[1]+1] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0] - 1, pos[1] + 1) and image_grayscale[pos[0]-1,pos[1]+1] ):
       q.append((pos[0]-1,pos[1]+1))
       new_image[pos[0]-1 - limit[2], pos[1]+1 - limit[0]] = image[pos[0]-1,pos[1]+1]
-      image_grayscale[pos[0]-1,pos[1]+1] = 255
+      image_grayscale[pos[0]-1,pos[1]+1] = False
 
-    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1] - 1) and image_grayscale[pos[0]+1,pos[1]-1] < bg ):
+    if(check_limit(image_grayscale.shape, pos[0] + 1, pos[1] - 1) and image_grayscale[pos[0]+1,pos[1]-1] ):
       q.append((pos[0]+1,pos[1]-1))
       new_image[pos[0]+1 - limit[2], pos[1]-1 - limit[0]] =  image[pos[0]+1,pos[1]-1]
-      image_grayscale[pos[0]+1,pos[1]-1] = 255
+      image_grayscale[pos[0]+1,pos[1]-1] = False
   return new_image
 
 def foo(file):
@@ -91,13 +91,15 @@ def foo(file):
 
     image_copy = np.array(im)
 
-    image = np.array(im.convert("L"))
+    image_l = np.array(im.convert("L"))
 
-    height = image.shape[0]
-    width = image.shape[1]
+    height = image_l.shape[0]
+    width = image_l.shape[1]
 
-    #image = np.where(image < bg, image, 255)
-    #image = np.where(image > bg, image, 0)
+    image_l = np.where(image_l > bg, image_l, True)
+    image_l = np.where(image_l < bg, image_l, False)
+
+    image = np.array(image_l, dtype=bool)
 
     #kernel = np.ones((5,5),np.uint8)
     #image = cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
@@ -106,7 +108,7 @@ def foo(file):
 
     for x in range(0,height):
       for y in range(0,width):
-          if(image[x,y] < bg):
+          if(image[x,y]):
                 origin = pq = (x,y)
                 c = 0
                 border.append((x,y))
@@ -114,7 +116,7 @@ def foo(file):
                     i = pq[0] + neighbours[c][0]
                     j = pq[1] + neighbours[c][1]
                     if(check_limit(image.shape, i, j)):
-                        if(image[i,j] < bg):
+                        if(image[i,j]):
                             c = (c + 5)%8
                             border.append((i,j))
                             pq = (i,j)
@@ -128,7 +130,7 @@ def foo(file):
                         if(not (check_limit(image.shape, i, j))):
                             c = (c + 1)%8
                             continue
-                        if(image[i,j] < bg):
+                        if(image[i,j]):
                             c = (c + 5)%8
                             border.append((i,j))
                             pq = (i,j)
