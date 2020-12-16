@@ -1,5 +1,5 @@
 import numpy as np
-#import cv2 as cv
+import cv2 as cv
 from PIL import Image
 
 
@@ -12,11 +12,14 @@ def bar(border, limit):
     #preenche com branco
     new_image[:] = 255
 
+    a_p = []
+
     #para cada pixel da borda a posição correspondente do new_image é pintado
     #de preto
     for x in border:
+      a_p.append((x[0] - limit[2],x[1] - limit[0]))
       new_image[x[0] - limit[2],x[1] - limit[0]] = 0
-    return new_image
+    return new_image, np.array(a_p)
 
 def check_limit(shape, i, j):
     if(i >= 0 and j >=0 and i < shape[0] and j < shape[1]):
@@ -79,6 +82,48 @@ def floodfill(image, y,x, bg, limit, image_grayscale):
       image_grayscale[pos[0]+1,pos[1]-1] = False
   return new_image
 
+def baz(a, image):
+    meanf = np.mean(a, axis=0)
+    y0,x0 = int(meanf[0]), int(meanf[1])
+
+    neighbours = [[-1,-1], [-1,0], [-1,1], [0,1], [1,1], [1,0], [1,-1], [0,-1]]
+
+    miny = np.min(a[:,0])
+    maxy = np.max(a[:,0])
+    minx = np.min(a[:,1])
+    maxx = np.max(a[:,1])
+
+    signs = []
+
+    for angle in range(360):
+        if(angle < 90 or angle > 270):
+            for x in range(maxx,x0-1,-1):
+                y = int(round(np.tan(angle) * (x - x0) + y0))
+                #print(f"{y} {x}")
+                if(not check_limit(image.shape,y,x)):
+                    continue
+                if(image[y,x] == 0):
+                    d = (x0-x)**2 + (y0-y)**2
+                    signs.append(d)
+                    break
+                image[y,x] = 127
+
+        else:
+            for x in range(minx,x0+1,1):
+                y = int(round(np.tan(angle) * (x - x0) + y0))
+                if(not check_limit(image.shape,y,x)):
+                    continue
+                if(image[y,x] == 0):
+                    d = (x0-x)**2 + (y0-y)**2
+                    signs.append(d)
+                    break
+                image[y,x] = 127
+
+    return signs
+
+
+
+
 def foo(file):
     name_image = file[7:-4]
 
@@ -86,7 +131,7 @@ def foo(file):
     if(im.mode == "RGBA"):
         im.putalpha(255)
         #print(im.getpixel((0,0)))
-        
+
     im = im.convert("RGB")
 
     #print(len(im.mode))
@@ -153,21 +198,25 @@ def foo(file):
                 minx = np.min(a[:,1]) - 1
                 maxx = np.max(a[:,1]) + 1
                 limit = [minx, maxx, miny, maxy]
-                meanf = np.mean(a, axis=0)
-                meani = (int(meanf[0] - miny), int(meanf[1] - minx))
+
                 #print(meani)
 
                 if(len(border) > 20):
                     image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
-                    image_p = bar(border,limit)
-                    #image_p[meani] = 0
+                    image_p,a_p = bar(border,limit)
                     name_file = "Imagens/" + name_image + "_" + str(count) + ".png"
                     name_filep = "Imagens/" + name_image + "_" + str(count)+ '-P' + ".png"
                     Image.fromarray(np.uint8(image_color)).save(name_file)
                     Image.fromarray(np.uint8(image_p)).save(name_filep)
+                    signatures = baz(a_p,image_p)
+                    print(len(signatures))
+                    Image.fromarray(np.uint8(image_p)).save("a.png")
+                    exit()
+                    #image_p[meani] = 0
+
+
                     count = count + 1
 
                 border = []
-
     #Image.fromarray(np.uint8(image_copy)).show()
     #im = Image.fromarray(np.uint8(image))
