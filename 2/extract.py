@@ -82,7 +82,15 @@ def floodfill(image, y,x, bg, limit, image_grayscale):
 def foo(file):
     name_image = file[7:-4]
 
-    im = Image.open(file).convert("RGB")
+    im = Image.open(file)
+    if(im.mode == "RGBA"):
+        im.putalpha(255)
+        #print(im.getpixel((0,0)))
+        
+    im = im.convert("RGB")
+
+    #print(len(im.mode))
+    #exit()
 
     bg = 220
     neighbours = [[-1,-1], [-1,0], [-1,1], [0,1], [1,1], [1,0], [1,-1], [0,-1]]
@@ -123,7 +131,7 @@ def foo(file):
                             break
                     c = (c + 1)%8
                 while(pq != origin):
-                    start_pq = pq
+                    #start_pq = pq
                     for _ in range(0, 7):
                         i = pq[0] + neighbours[c][0]
                         j = pq[1] + neighbours[c][1]
@@ -145,10 +153,14 @@ def foo(file):
                 minx = np.min(a[:,1]) - 1
                 maxx = np.max(a[:,1]) + 1
                 limit = [minx, maxx, miny, maxy]
+                meanf = np.mean(a, axis=0)
+                meani = (int(meanf[0] - miny), int(meanf[1] - minx))
+                #print(meani)
 
                 if(len(border) > 20):
                     image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
                     image_p = bar(border,limit)
+                    #image_p[meani] = 0
                     name_file = "Imagens/" + name_image + "_" + str(count) + ".png"
                     name_filep = "Imagens/" + name_image + "_" + str(count)+ '-P' + ".png"
                     Image.fromarray(np.uint8(image_color)).save(name_file)
