@@ -96,9 +96,32 @@ def baz(a, image):
     signs = []
 
     for angle in range(360):
-        if(angle < 90 or angle > 270):
+        if(angle <= 45 or angle >= 315):
             for x in range(maxx,x0-1,-1):
-                y = int(round(np.tan(angle) * (x - x0) + y0))
+                y = int((np.tan(np.radians(angle)) * (x - x0) + y0))
+                #print(f"{y} {x}")
+                #print(x,y)
+                if(not check_limit(image.shape,y,x)):
+                    continue
+                if(image[y,x] == 0):
+                    d = (x0-x)**2 + (y0-y)**2
+                    signs.append(d)
+                    break
+                image[y,x] = 127
+        elif(angle > 45 and angle <= 135):
+            for y in range(0,y0-1,1):
+                x = int((1/np.tan(np.radians(-angle)) * (y - y0) + x0))
+                #print(f"{y} {x}")
+                if(not check_limit(image.shape,y,x)):
+                    continue
+                if(image[y,x] == 0):
+                    d = (x0-x)**2 + (y0-y)**2
+                    signs.append(d)
+                    break
+                image[y,x] = 127
+        elif(angle >= 225 and angle < 315):
+            for y in range(maxy,y0-1,-1):
+                x = int((1/np.tan(np.radians(-angle)) * (y - y0) + x0))
                 #print(f"{y} {x}")
                 if(not check_limit(image.shape,y,x)):
                     continue
@@ -109,8 +132,8 @@ def baz(a, image):
                 image[y,x] = 127
 
         else:
-            for x in range(minx,x0+1,1):
-                y = int(round(np.tan(angle) * (x - x0) + y0))
+            for x in range(0,x0+1,1):
+                y = int((np.tan(np.radians(angle)) * (x - x0) + y0))
                 if(not check_limit(image.shape,y,x)):
                     continue
                 if(image[y,x] == 0):
@@ -204,14 +227,14 @@ def foo(file):
                 if(len(border) > 20):
                     image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
                     image_p,a_p = bar(border,limit)
+                    signatures = baz(a_p,image_p)
                     name_file = "Imagens/" + name_image + "_" + str(count) + ".png"
                     name_filep = "Imagens/" + name_image + "_" + str(count)+ '-P' + ".png"
                     Image.fromarray(np.uint8(image_color)).save(name_file)
                     Image.fromarray(np.uint8(image_p)).save(name_filep)
-                    signatures = baz(a_p,image_p)
                     print(len(signatures))
-                    Image.fromarray(np.uint8(image_p)).save("a.png")
-                    exit()
+                    #Image.fromarray(np.uint8(image_p)).save("a.png")
+                    #exit()
                     #image_p[meani] = 0
 
 
