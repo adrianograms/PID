@@ -107,6 +107,23 @@ def baz(a, image):
                     d = (x0-x)**2 + (y0-y)**2
                     signs.append(d)
                     break
+                #codigo novo
+                up = y - 1
+                up = up if y >= 0 else 0
+                down = y + 1
+                down = down if y < image.shape[0] else image.shape[0] - 1
+                left = x -1
+                left = left if x >=0 else 0
+                right = x + 1
+                right = right if x < image.shape[1] else image.shape[1] - 1
+                zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+                if(len(zeroes) > 0):
+                    newy = up + zeroes[0][0]
+                    nexy = left + zeroes[0][1]
+                    d = (x0-nexy)**2 + (y0-newy)**2
+                    signs.append(d)
+                    break
+                #fim codigo novo
                 image[y,x] = 127
         elif(angle > 45 and angle <= 135):
             for y in range(0,y0-1,1):
@@ -118,6 +135,23 @@ def baz(a, image):
                     d = (x0-x)**2 + (y0-y)**2
                     signs.append(d)
                     break
+                #codigo novo
+                up = y - 1
+                up = up if y >= 0 else 0
+                down = y + 1
+                down = down if y < image.shape[0] else image.shape[0] - 1
+                left = x -1
+                left = left if x >=0 else 0
+                right = x + 1
+                right = right if x < image.shape[1] else image.shape[1] - 1
+                zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+                if(len(zeroes) > 0):
+                    newy = up + zeroes[0][0]
+                    nexy = left + zeroes[0][1]
+                    d = (x0-nexy)**2 + (y0-newy)**2
+                    signs.append(d)
+                    break
+                #fim codigo novo
                 image[y,x] = 127
         elif(angle >= 225 and angle < 315):
             for y in range(maxy,y0-1,-1):
@@ -129,6 +163,23 @@ def baz(a, image):
                     d = (x0-x)**2 + (y0-y)**2
                     signs.append(d)
                     break
+                #codigo novo
+                up = y - 1
+                up = up if y >= 0 else 0
+                down = y + 1
+                down = down if y < image.shape[0] else image.shape[0] - 1
+                left = x -1
+                left = left if x >=0 else 0
+                right = x + 1
+                right = right if x < image.shape[1] else image.shape[1] - 1
+                zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+                if(len(zeroes) > 0):
+                    newy = up + zeroes[0][0]
+                    nexy = left + zeroes[0][1]
+                    d = (x0-nexy)**2 + (y0-newy)**2
+                    signs.append(d)
+                    break
+                #fim codigo novo
                 image[y,x] = 127
 
         else:
@@ -140,6 +191,23 @@ def baz(a, image):
                     d = (x0-x)**2 + (y0-y)**2
                     signs.append(d)
                     break
+                #codigo novo
+                up = y - 1
+                up = up if y >= 0 else 0
+                down = y + 1
+                down = down if y < image.shape[0] else image.shape[0] - 1
+                left = x -1
+                left = left if x >=0 else 0
+                right = x + 1
+                right = right if x < image.shape[1] else image.shape[1] - 1
+                zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+                if(len(zeroes) > 0):
+                    newy = up + zeroes[0][0]
+                    nexy = left + zeroes[0][1]
+                    d = (x0-nexy)**2 + (y0-newy)**2
+                    signs.append(d)
+                    break
+                #fim codigo novo
                 image[y,x] = 127
 
     return signs
