@@ -124,7 +124,7 @@ def baz(a, image):
                     signs.append(d)
                     break
                 #fim codigo novo
-                image[y,x] = 127
+                #image[y,x] = 127
         elif(angle > 45 and angle <= 135):
             for y in range(0,y0-1,1):
                 x = int((1/np.tan(np.radians(-angle)) * (y - y0) + x0))
@@ -152,7 +152,7 @@ def baz(a, image):
                     signs.append(d)
                     break
                 #fim codigo novo
-                image[y,x] = 127
+                #image[y,x] = 127
         elif(angle >= 225 and angle < 315):
             for y in range(maxy,y0-1,-1):
                 x = int((1/np.tan(np.radians(-angle)) * (y - y0) + x0))
@@ -180,7 +180,7 @@ def baz(a, image):
                     signs.append(d)
                     break
                 #fim codigo novo
-                image[y,x] = 127
+                #image[y,x] = 127
 
         else:
             for x in range(0,x0+1,1):
@@ -208,12 +208,23 @@ def baz(a, image):
                     signs.append(d)
                     break
                 #fim codigo novo
-                image[y,x] = 127
+                #image[y,x] = 127
 
     return signs
 
+def mean(signs):
+    sum = 0
+    for i in signs:
+      sum = sum + i
+    return sum/len(signs)
 
-
+def var(signs, m = -1, n = 2):
+    if(m == -1):
+      m = mean(signs)
+    sum = 0
+    for i in signs:
+      sum = sum + (i - m)**n
+    return sum/len(signs)
 
 def foo(file):
     name_image = file[7:-4]
@@ -300,7 +311,10 @@ def foo(file):
                     name_filep = "Imagens/" + name_image + "_" + str(count)+ '-P' + ".png"
                     Image.fromarray(np.uint8(image_color)).save(name_file)
                     Image.fromarray(np.uint8(image_p)).save(name_filep)
-                    print(len(signatures))
+                    #m = mean, v = variance, p = perimeter
+                    m = mean(signatures)
+                    v = var(signatures,m, n = 2)
+                    p = len(border)
                     #Image.fromarray(np.uint8(image_p)).save("a.png")
                     #exit()
                     #image_p[meani] = 0
