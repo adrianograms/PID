@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from PIL import Image
 
 
@@ -105,10 +106,6 @@ def baz(a, image):
                 #print(x,y)
                 if(not check_limit(image.shape,y,x)):
                     continue
-                if(image[y,x] == 0):
-                    d = (x0-x)**2 + (y0-y)**2
-                    signs.append(d)
-                    break
                 #codigo novo
                 up = y - 1
                 up = up if y >= 0 else 0
@@ -122,7 +119,7 @@ def baz(a, image):
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
-                    d = (x0-nexy)**2 + (y0-newy)**2
+                    d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
                 #fim codigo novo
@@ -133,10 +130,6 @@ def baz(a, image):
                 #print(f"{y} {x}")
                 if(not check_limit(image.shape,y,x)):
                     continue
-                if(image[y,x] == 0):
-                    d = (x0-x)**2 + (y0-y)**2
-                    signs.append(d)
-                    break
                 #codigo novo
                 up = y - 1
                 up = up if y >= 0 else 0
@@ -150,7 +143,7 @@ def baz(a, image):
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
-                    d = (x0-nexy)**2 + (y0-newy)**2
+                    d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
                 #fim codigo novo
@@ -161,10 +154,6 @@ def baz(a, image):
                 #print(f"{y} {x}")
                 if(not check_limit(image.shape,y,x)):
                     continue
-                if(image[y,x] == 0):
-                    d = (x0-x)**2 + (y0-y)**2
-                    signs.append(d)
-                    break
                 #codigo novo
                 up = y - 1
                 up = up if y >= 0 else 0
@@ -178,7 +167,7 @@ def baz(a, image):
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
-                    d = (x0-nexy)**2 + (y0-newy)**2
+                    d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
                 #fim codigo novo
@@ -189,10 +178,6 @@ def baz(a, image):
                 y = int((np.tan(np.radians(angle)) * (x - x0) + y0))
                 if(not check_limit(image.shape,y,x)):
                     continue
-                if(image[y,x] == 0):
-                    d = (x0-x)**2 + (y0-y)**2
-                    signs.append(d)
-                    break
                 #codigo novo
                 up = y - 1
                 up = up if y >= 0 else 0
@@ -206,7 +191,7 @@ def baz(a, image):
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
-                    d = (x0-nexy)**2 + (y0-newy)**2
+                    d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
                 #fim codigo novo
@@ -319,7 +304,7 @@ def foo(file):
                     Image.fromarray(np.uint8(image_p)).save(name_filep)
                     # m = mean, v = variance, p = perimeter
 
-                    signatures /= np.max(signatures)
+                    signatures = (signatures - np.min(signatures))/(np.max(signatures) - np.min(signatures))
 
                     # dava pra usar as funcoes do numpy
                     m = mean(signatures)
