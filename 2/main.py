@@ -3,6 +3,9 @@ import numpy as np
 import sys
 
 
+fmt = '%d', '%1.5f', '%1.5f'
+
+
 def main():
     with open(sys.argv[1]) as f:
         for line in f:
@@ -11,7 +14,7 @@ def main():
                        res,
                        header='folha, media, variancia',
                        delimiter=',',
-                       fmt='%1.5f')
+                       fmt=fmt)
 
 
 if __name__ == '__main__':
