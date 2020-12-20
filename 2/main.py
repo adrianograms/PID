@@ -3,7 +3,7 @@ import numpy as np
 import sys
 
 
-fmt = '%d', '%1.5f', '%1.5f'
+fmt = '%d', '%d', '%1.5f', '%1.5f'
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
             res = foo(line[:-1])
             np.savetxt('csv/' + line[:-1].split('/')[1][:-4] + '.csv',
                        res,
-                       header='folha, media, variancia',
+                       header='folha, perimetro, media, variancia',
                        delimiter=',',
                        fmt=fmt)
 

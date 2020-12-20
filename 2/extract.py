@@ -27,7 +27,7 @@ def check_limit(shape, i, j):
         return True
     return False
 
-
+# serve para apagar a folha da imagem original
 def floodfill(image, y,x, bg, limit, image_grayscale):
     # limit = [minx, maxx, miny, maxy]
     # print(limit)
@@ -98,6 +98,7 @@ def baz(a, image):
     signs = []
 
     # mamamia that's a spicy meatball
+    # calculo da assinatura das bordas das folhas
     for angle in range(360):
         if(angle <= 45 or angle >= 315):
             for x in range(maxx,x0-1,-1):
@@ -217,14 +218,13 @@ def foo(file):
     name_image = file[7:-4]
 
     im = Image.open(file)
+    # tratamento da imagem 13
     if(im.mode == "RGBA"):
-        im.putalpha(255)
-        #print(im.getpixel((0,0)))
-
+        for i in range(im.height):
+            for j in range(im.width):
+                if(im.getpixel((j,i))[3] == 0):
+                    im.putpixel((j,i),(255,255,255,255))
     im = im.convert("RGB")
-
-    #print(len(im.mode))
-    #exit()
 
     bg = 220
     neighbours = [[-1,-1], [-1,0], [-1,1], [0,1], [1,1], [1,0], [1,-1], [0,-1]]
@@ -243,14 +243,12 @@ def foo(file):
 
     image = np.array(image_l, dtype=bool)
 
-    #kernel = np.ones((5,5),np.uint8)
-    #image = cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
-
     count = 0
 
     # medias e variancias
     ms = []
     vs = []
+    mp = []
 
     for x in range(0,height):
       for y in range(0,width):
@@ -282,8 +280,9 @@ def foo(file):
                             pq = (i,j)
                             break
                         c = (c + 1)%8
-                    # if(start_pq[0] == pq[0] and start_pq[1] == pq[1]):
+                    #if(start_pq[0] == pq[0] and start_pq[1] == pq[1]):
                         #print(start_pq, pq)
+                        #image_copy[pq] = [255,0,0]
                         #break
                 a = np.array(border)
                 miny = np.min(a[:,0]) - 1
@@ -292,10 +291,9 @@ def foo(file):
                 maxx = np.max(a[:,1]) + 1
                 limit = [minx, maxx, miny, maxy]
 
-                # print(meani)
-
+                image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
                 if(len(border) > 20):
-                    image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
+                    #image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
                     image_p,a_p = bar(border,limit)
                     signatures = baz(a_p,image_p)
                     name_file = "Imagens/" + name_image + "_" + str(count) + ".png"
@@ -311,15 +309,14 @@ def foo(file):
                     ms.append(m)
                     vs.append(var(signatures, m, n=2))
                     p = len(border)
+                    mp.append(p)
 
-                    #Image.fromarray(np.uint8(image_p)).save("a.png")
-                    #exit()
                     #image_p[meani] = 0
 
                     count = count + 1
 
                 border = []
 
-    return np.stack((np.arange(len(ms)), ms, vs), axis=-1)
+    return np.stack((np.arange(len(ms)), mp, ms, vs), axis=-1)
     #Image.fromarray(np.uint8(image_copy)).show()
     #im = Image.fromarray(np.uint8(image))
