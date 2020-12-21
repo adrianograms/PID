@@ -27,11 +27,8 @@ def check_limit(shape, i, j):
         return True
     return False
 
-# serve para apagar a folha da imagem original
+# serve para apagar a folha da imagem original e gerar a imagem da folha
 def floodfill(image, y,x, bg, limit, image_grayscale):
-    # limit = [minx, maxx, miny, maxy]
-    # print(limit)
-    # print(y, x)
 
     new_image = np.zeros((limit[3]-limit[2],limit[1]-limit[0],3), dtype=int)
     new_image[:] = [255, 255, 255]
@@ -84,6 +81,7 @@ def floodfill(image, y,x, bg, limit, image_grayscale):
             image_grayscale[pos[0]+1, pos[1]-1] = False
     return new_image
 
+# calculo da assinatura das bordas das folhas
 def baz(a, image):
     meanf = np.mean(a, axis=0)
     y0,x0 = int(meanf[0]), int(meanf[1])
@@ -97,17 +95,17 @@ def baz(a, image):
 
     signs = []
 
-    # mamamia that's a spicy meatball
-    # calculo da assinatura das bordas das folhas
+    # geração das 360 retas, uma para cada grau
     for angle in range(360):
         if(angle <= 45 or angle >= 315):
             for x in range(maxx,x0-1,-1):
+                # equação da reta
                 y = int((np.tan(np.radians(angle)) * (x - x0) + y0))
-                #print(f"{y} {x}")
-                #print(x,y)
+
+                # verificação dos limites
                 if(not check_limit(image.shape,y,x)):
                     continue
-                #codigo novo
+
                 up = y - 1
                 up = up if y >= 0 else 0
                 down = y + 1
@@ -116,22 +114,24 @@ def baz(a, image):
                 left = left if x >=0 else 0
                 right = x + 1
                 right = right if x < image.shape[1] else image.shape[1] - 1
+
                 zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+
+                # verifica se existem valores de borda na vizinhaça 8 do ponto analisado
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
                     d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
-                #fim codigo novo
-                #image[y,x] = 127
+
         elif(angle > 45 and angle <= 135):
             for y in range(0,y0-1,1):
                 x = int((1/np.tan(np.radians(-angle)) * (y - y0) + x0))
-                #print(f"{y} {x}")
+
                 if(not check_limit(image.shape,y,x)):
                     continue
-                #codigo novo
+
                 up = y - 1
                 up = up if y >= 0 else 0
                 down = y + 1
@@ -140,22 +140,23 @@ def baz(a, image):
                 left = left if x >=0 else 0
                 right = x + 1
                 right = right if x < image.shape[1] else image.shape[1] - 1
+
                 zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
                     d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
-                #fim codigo novo
-                #image[y,x] = 127
+
         elif(angle >= 225 and angle < 315):
             for y in range(maxy,y0-1,-1):
                 x = int((1/np.tan(np.radians(-angle)) * (y - y0) + x0))
-                #print(f"{y} {x}")
+
                 if(not check_limit(image.shape,y,x)):
                     continue
-                #codigo novo
+
                 up = y - 1
                 up = up if y >= 0 else 0
                 down = y + 1
@@ -164,22 +165,23 @@ def baz(a, image):
                 left = left if x >=0 else 0
                 right = x + 1
                 right = right if x < image.shape[1] else image.shape[1] - 1
+
                 zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
                     d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
-                #fim codigo novo
-                #image[y,x] = 127
 
         else:
             for x in range(0,x0+1,1):
                 y = int((np.tan(np.radians(angle)) * (x - x0) + y0))
+
                 if(not check_limit(image.shape,y,x)):
                     continue
-                #codigo novo
+
                 up = y - 1
                 up = up if y >= 0 else 0
                 down = y + 1
@@ -188,15 +190,15 @@ def baz(a, image):
                 left = left if x >=0 else 0
                 right = x + 1
                 right = right if x < image.shape[1] else image.shape[1] - 1
+
                 zeroes = np.argwhere(image[up:down + 1, left:right + 1] == 0)
+
                 if(len(zeroes) > 0):
                     newy = up + zeroes[0][0]
                     nexy = left + zeroes[0][1]
                     d = math.sqrt((x0-nexy)**2 + (y0-newy)**2)
                     signs.append(d)
                     break
-                #fim codigo novo
-                #image[y,x] = 127
 
     return signs
 
@@ -250,6 +252,7 @@ def foo(file):
     vs = []
     mp = []
 
+    # segmetação das folhas, pelas bordas
     for x in range(0,height):
       for y in range(0,width):
           if(image[x,y]):
@@ -267,7 +270,6 @@ def foo(file):
                             break
                     c = (c + 1)%8
                 while(pq != origin):
-                    #start_pq = pq
                     for _ in range(0, 7):
                         i = pq[0] + neighbours[c][0]
                         j = pq[1] + neighbours[c][1]
@@ -280,10 +282,7 @@ def foo(file):
                             pq = (i,j)
                             break
                         c = (c + 1)%8
-                    #if(start_pq[0] == pq[0] and start_pq[1] == pq[1]):
-                        #print(start_pq, pq)
-                        #image_copy[pq] = [255,0,0]
-                        #break
+
                 a = np.array(border)
                 miny = np.min(a[:,0]) - 1
                 maxy = np.max(a[:,0]) + 1
@@ -291,9 +290,11 @@ def foo(file):
                 maxx = np.max(a[:,1]) + 1
                 limit = [minx, maxx, miny, maxy]
 
+                # apaga a imagem, e a armazena para futuro processamento, mesmo sendo ruido
                 image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
+
+                # verifica se o tamanho do objeto é consideravel, para evitar ruidos na imagem
                 if(len(border) > 20):
-                    #image_color = floodfill(image_copy, border[0][0],border[0][1], bg, limit, image)
                     image_p,a_p = bar(border,limit)
                     signatures = baz(a_p,image_p)
                     name_file = "Imagens/" + name_image + "_" + str(count) + ".png"
@@ -304,19 +305,15 @@ def foo(file):
 
                     signatures = (signatures - np.min(signatures))/(np.max(signatures) - np.min(signatures))
 
-                    # dava pra usar as funcoes do numpy
+                    # calculo da media e da varancia
                     m = mean(signatures)
                     ms.append(m)
                     vs.append(var(signatures, m, n=2))
                     p = len(border)
                     mp.append(p)
 
-                    #image_p[meani] = 0
-
                     count = count + 1
 
                 border = []
 
     return np.stack((np.arange(len(ms)), mp, ms, vs), axis=-1)
-    #Image.fromarray(np.uint8(image_copy)).show()
-    #im = Image.fromarray(np.uint8(image))
