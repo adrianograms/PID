@@ -1,20 +1,37 @@
 Primeiro e preciso instalar as dependências usando pip, também é
 necessário python 3.8. Para instalar as dependências utilize:
 
-pip install requirements.txt
+pip install -r requirements.txt
+ou
+pip install pillow
+pip install numpy
 
 NOTA: Pode ser necessário executar o comando acima como sudo.
 
 Para utilizar o software basta executar: ./main.py ou python main.py
 
-O unico parametro necessario é o nome do arquivo com o caminho para 
-as imagens a serem processadas, podem ser mais de uma por vez. Por padrão 
-esse arquivo é o files.txt
+O unico parametro necessario é o nome do arquivo com o caminho (relativo) para 
+as imagens a serem processadas, pode ser mais de uma imagem por execução. Por 
+padrão esse arquivo é o files.txt
 
-Por padrão, todos os caminhos para todas as imagens estão setados, esses
-caminhos apontam para a pasta Imagens e para cada subpasta dentro que
-representa uma das imagens, se recomenda que coloque as imagens em seus
-respectivos folders. Por exemplo: Teste01.png -> Imagem1, Teste02 -> Imagem2
+Por padrão, todos os caminhos para todas as imagens estão setados no arquivo 
+files.txt, esses caminhos apontam para a pasta Imagens e para cada subpasta 
+dentro que representa uma das imagens, se recomenda que coloque as imagens em 
+seus respectivos folders. Por exemplo: Teste01.png -> Imagem1, Teste02 -> Imagem2
+
+É possivel utilizar outros caminhos se desejado.
+
+O processamento para cada imagem é pesado, e caso o programa rode para todas as
+imagens, esse processo pode levar alguns minutos.
+
+Ao fim do processamento de cada imagem, sera gerado um csv com as caractersiticas
+extraidas, esse csv será armazenado na pasta csv, e o nome desse arquivo será 
+correnspondete a imagem processada. Exemplo: Teste01.png -> Teste01.csv
+
+Como especificado no trabalho, as imagens resultantes serão armazenada no mesmo
+diretorio da imagem original.
+
+NOTA: As imagens originais/teste não estão sendo enviadas dentro do zip.
 
 Exemplo de uso:
 
