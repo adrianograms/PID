@@ -1,0 +1,27 @@
+Primeiro e preciso instalar as dependências usando pip, também é
+necessário python 3.8. Para instalar as dependências utilize:
+
+pip install requirements.txt
+
+NOTA: Pode ser necessário executar o comando acima como sudo.
+
+Para utilizar o software basta executar: ./main.py ou python main.py
+
+O unico parametro necessario é o nome do arquivo com o caminho para 
+as imagens a serem processadas, podem ser mais de uma por vez. Por padrão 
+esse arquivo é o files.txt
+
+Por padrão, todos os caminhos para todas as imagens estão setados, esses
+caminhos apontam para a pasta Imagens e para cada subpasta dentro que
+representa uma das imagens, se recomenda que coloque as imagens em seus
+respectivos folders. Por exemplo: Teste01.png -> Imagem1, Teste02 -> Imagem2
+
+Exemplo de uso:
+
+python main.py files.txt
+ou
+./main.py files.txt
+
+
+
+
