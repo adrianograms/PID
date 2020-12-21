@@ -217,7 +217,11 @@ def var(signs, m = -1, n = 2):
     return sum/len(signs)
 
 def foo(file):
-    name_image = file[7:-4]
+    name_aux = file.split("/")
+    name_image = name_aux[len(name_aux)-1].split(".")[0]
+    caminho = name_aux[0] + "/" if len(name_aux) > 1 else ""
+    for valor in range(1, len(name_aux) - 1, 1):
+        caminho += name_aux[valor] + "/"
 
     im = Image.open(file)
     # tratamento da imagem 13
@@ -297,8 +301,8 @@ def foo(file):
                 if(len(border) > 20):
                     image_p,a_p = bar(border,limit)
                     signatures = baz(a_p,image_p)
-                    name_file = "Imagens/" + name_image + "_" + str(count) + ".png"
-                    name_filep = "Imagens/" + name_image + "_" + str(count)+ '-P' + ".png"
+                    name_file = caminho + name_image + "_" + str(count) + ".png"
+                    name_filep = caminho + name_image + "_" + str(count)+ '-P' + ".png"
                     Image.fromarray(np.uint8(image_color)).save(name_file)
                     Image.fromarray(np.uint8(image_p)).save(name_filep)
                     # m = mean, v = variance, p = perimeter
